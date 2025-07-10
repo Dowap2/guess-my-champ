@@ -3,5 +3,18 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./dist",
+    "noEmit": false,
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "target": "es6",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "types": ["jest", "react", "react-dom"]
+  },
+  "include": ["src/**/*"]
 }
