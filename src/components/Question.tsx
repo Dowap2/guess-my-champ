@@ -1,4 +1,4 @@
-import React from "react";
+import React, { type JSX } from "react";
 import { QuizComponent, Button } from "./styled";
 import { QuestionSelector } from "./QuestionSelector";
 import { QuizResult } from "./QuizResult";
@@ -8,7 +8,7 @@ import { Timer } from "./Timer";
 import { useQuiz } from "./hooks/useQuiz";
 import { MOCK_QUESTIONS, TIMER_DURATION } from "./constants";
 
-export const Question: React.FC = () => {
+export const Question: React.FC = (): JSX.Element => {
   const {
     answer,
     timeLeft,
