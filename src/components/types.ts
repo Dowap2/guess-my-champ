@@ -1,7 +1,7 @@
 export type Question = {
   correctAnswer: string;
   skillImages: string[];
-};
+} | null;
 
 export type QuizResult = "correct" | "wrong" | null;
 

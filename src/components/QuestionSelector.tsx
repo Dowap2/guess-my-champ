@@ -1,5 +1,5 @@
 import React from "react";
-import { QuizComponent, Button } from "./styled.ts";
+import { QuizComponent, Button } from "./styled";
 import { QUESTION_COUNT_OPTIONS } from "./constants";
 
 interface QuestionSelectorProps {

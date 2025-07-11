@@ -6,9 +6,9 @@ import { QuizQuestion } from "./QuizQuestion";
 import { ProgressBar } from "./ProgressBar";
 import { Timer } from "./Timer";
 import { useQuiz } from "./hooks/useQuiz";
-import { MOCK_QUESTIONS, TIMER_DURATION } from "./constants";
+import { TIMER_DURATION } from "./constants";
 
-export const Question: React.FC = (): JSX.Element => {
+export const Question: React.FC = () => {
   const {
     answer,
     timeLeft,
@@ -22,6 +22,8 @@ export const Question: React.FC = (): JSX.Element => {
     quizStats,
     isDisabled,
     total,
+    lastQuestion,
+    questionList,
     setAnswer,
     handleSubmit,
     handleKeyPress,
@@ -37,7 +39,6 @@ export const Question: React.FC = (): JSX.Element => {
   if (isQuizFinished) {
     return <QuizResult stats={quizStats} onRestart={restartQuiz} />;
   }
-
   return (
     <QuizComponent>
       <h2>이 스킬들의 주인은 누구일까요?</h2>
@@ -54,6 +55,7 @@ export const Question: React.FC = (): JSX.Element => {
           answer={answer}
           result={result}
           isDisabled={isDisabled}
+          questionList={questionList}
           onAnswerChange={setAnswer}
           onSubmit={handleSubmit}
           onKeyPress={handleKeyPress}
@@ -63,7 +65,7 @@ export const Question: React.FC = (): JSX.Element => {
       <Timer timeLeft={timeLeft} maxTime={TIMER_DURATION} />
       {(result !== null || timeLeft === 0) && (
         <Button onClick={resetQuiz} style={{ marginTop: "20px" }}>
-          다음 문제 ▶
+          {lastQuestion ? "결과 보기 ▶" : "다음 문제 ▶"}
         </Button>
       )}
     </QuizComponent>

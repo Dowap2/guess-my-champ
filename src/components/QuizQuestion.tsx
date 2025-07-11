@@ -14,6 +14,7 @@ interface QuizQuestionProps {
   answer: string;
   result: QuizResult;
   isDisabled: boolean;
+  questionList: Question[];
   onAnswerChange: (answer: string) => void;
   onSubmit: () => void;
   onKeyPress: (e: React.KeyboardEvent) => void;
@@ -24,14 +25,16 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   answer,
   result,
   isDisabled,
+  questionList,
   onAnswerChange,
   onSubmit,
   onKeyPress,
 }) => {
+  console.log(question);
   return (
     <>
       <QuizContent>
-        {question.skillImages.map((url, idx) => (
+        {question?.skillImages.map((url, idx) => (
           <QuizImage key={idx} src={url} alt={`Skill ${idx}`} />
         ))}
       </QuizContent>
@@ -56,7 +59,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
       {result === "wrong" && (
         <Message result="wrong">
-          ❌ 오답입니다! 정답은 {question.correctAnswer}
+          ❌ 오답입니다! 정답은 {question?.correctAnswer}
         </Message>
       )}
     </>
