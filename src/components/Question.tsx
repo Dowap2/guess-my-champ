@@ -13,16 +13,13 @@ export const Question: React.FC = () => {
     answer,
     timeLeft,
     result,
-    currentQuestion,
     questionsAnswered,
     questionCount,
-    // selectedQuestions,
     isQuizFinished,
     progress,
     quizStats,
     isDisabled,
     total,
-    lastQuestion,
     questionList,
     setAnswer,
     handleSubmit,
@@ -31,7 +28,6 @@ export const Question: React.FC = () => {
     resetQuiz,
     restartQuiz,
   } = useQuiz();
-
   if (questionCount === null) {
     return <QuestionSelector onSelectCount={handleSetQuiz} />;
   }
@@ -49,12 +45,12 @@ export const Question: React.FC = () => {
         progress={progress}
       />
 
-      {currentQuestion && (
+      {questionList[questionsAnswered] && (
         <QuizQuestion
-          question={currentQuestion}
           answer={answer}
           result={result}
           isDisabled={isDisabled}
+          current={questionsAnswered}
           questionList={questionList}
           onAnswerChange={setAnswer}
           onSubmit={handleSubmit}
@@ -65,7 +61,7 @@ export const Question: React.FC = () => {
       <Timer timeLeft={timeLeft} maxTime={TIMER_DURATION} />
       {(result !== null || timeLeft === 0) && (
         <Button onClick={resetQuiz} style={{ marginTop: "20px" }}>
-          {lastQuestion ? "결과 보기 ▶" : "다음 문제 ▶"}
+          {questionsAnswered + 1 === total ? "결과 보기 ▶" : "다음 문제 ▶"}
         </Button>
       )}
     </QuizComponent>

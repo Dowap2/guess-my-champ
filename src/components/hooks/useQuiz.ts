@@ -1,42 +1,17 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import type { Question, QuizResult } from "../types.ts";
-import {
-  MOCK_QUESTIONS,
-  TIMER_DURATION,
-  TIMER_INTERVAL,
-} from "../constants.js";
+import { TIMER_DURATION, TIMER_INTERVAL } from "../constants.js";
 
 export const useQuiz = () => {
   const [answer, setAnswer] = useState<string>("");
   const [timeLeft, setTimeLeft] = useState<number>(TIMER_DURATION);
   const [result, setResult] = useState<QuizResult>(null);
-  const [remainingQuestions, setRemainingQuestions] = useState<Question[]>([]);
-  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
   const [questionCount, setQuestionCount] = useState<number | null>(null);
-  const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
   const [correctCount, setCorrectCount] = useState(0);
   const [isQuizFinished, setIsQuizFinished] = useState(false);
   const [total, setTotal] = useState<number>(0);
-  const [lastQuestion, setLastQuestion] = useState<boolean>(false);
   const [questionList, setQuestionList] = useState<Question[]>([]);
-
-  const drawRandomQuestion = useCallback((questions: Question[]) => {
-    const idx = Math.floor(Math.random() * questions.length);
-    const selected = questions[idx];
-    const remaining = questions.filter((_, i) => i !== idx);
-    console.log(selected, remaining);
-    return { question: selected, remaining };
-  }, []);
-
-  useEffect(() => {
-    if (remainingQuestions.length > 0 && !currentQuestion) {
-      const first = drawRandomQuestion(remainingQuestions);
-      console.log(first);
-      setCurrentQuestion(first.question);
-      setRemainingQuestions(first.remaining);
-    }
-  }, [remainingQuestions, currentQuestion, drawRandomQuestion]);
 
   useEffect(() => {
     if (timeLeft <= 0 || result !== null) return;
@@ -54,18 +29,21 @@ export const useQuiz = () => {
     return () => clearInterval(interval);
   }, [result, timeLeft]);
 
-  const handleSubmit = useCallback(() => {
-    if (!currentQuestion) return;
+  const handleSubmit = () => {
+    console.log(questionsAnswered, total);
+    if (questionsAnswered === total) {
+      return;
+    }
 
-    const isCorrect = answer.trim() === currentQuestion.correctAnswer;
+    const isCorrect =
+      answer.trim() === questionList[questionsAnswered]?.correctAnswer;
+
     setResult(isCorrect ? "correct" : "wrong");
+    console.log(isCorrect);
     if (isCorrect) {
       setCorrectCount((prev) => prev + 1);
     }
-    if (remainingQuestions.length === 0) {
-      setLastQuestion(true);
-    }
-  }, [answer, currentQuestion]);
+  };
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent) => {
@@ -76,58 +54,43 @@ export const useQuiz = () => {
     [handleSubmit, result, timeLeft]
   );
 
-  const handleSetQuiz = useCallback((count: number) => {
-    const shuffled = [...questionList].sort(() => Math.random() - 0.5);
-    setSelectedQuestions(shuffled.slice(0, count));
+  const handleSetQuiz = (count: number) => {
     setQuestionCount(count);
-    setRemainingQuestions(shuffled.slice(0, count));
     generateRandomQuestions(count);
     setTotal(count);
-  }, []);
+  };
 
-  const resetQuiz = useCallback(() => {
-    if (remainingQuestions.length === 0) {
+  const resetQuiz = () => {
+    if (questionsAnswered + 1 === total) {
       setIsQuizFinished(true);
-      setCurrentQuestion(null);
-      setQuestionsAnswered(0);
-      setLastQuestion(false);
       return;
     }
 
-    const next = drawRandomQuestion(remainingQuestions);
     setAnswer("");
     setResult(null);
     setTimeLeft(TIMER_DURATION);
-    setCurrentQuestion(next.question);
-    setRemainingQuestions(next.remaining);
     setQuestionsAnswered((prev) => prev + 1);
-  }, [remainingQuestions, drawRandomQuestion]);
+  };
 
   const restartQuiz = useCallback(() => {
     setQuestionCount(null);
     setCorrectCount(0);
     setIsQuizFinished(false);
     setQuestionsAnswered(0);
-    setRemainingQuestions([]);
-    setCurrentQuestion(null);
     setAnswer("");
     setResult(null);
     setTimeLeft(TIMER_DURATION);
   }, []);
 
   const progress = useMemo(() => {
-    if (selectedQuestions.length === 0) return 0;
-    return (
-      ((selectedQuestions.length - remainingQuestions.length) /
-        selectedQuestions.length) *
-      100
-    );
-  }, [remainingQuestions.length, selectedQuestions.length]);
+    if (total === 0) return 0;
+    return (questionsAnswered / total) * 100;
+  }, [questionsAnswered, total]);
 
   const quizStats = useMemo(() => {
-    const total = selectedQuestions.length;
     const incorrect = total - correctCount;
-    const rate = ((correctCount / total) * 100).toFixed(1);
+    const rate =
+      total === 0 ? "0.0" : ((correctCount / total) * 100).toFixed(1);
 
     return {
       total,
@@ -135,14 +98,13 @@ export const useQuiz = () => {
       incorrect,
       rate,
     };
-  }, [selectedQuestions.length, correctCount]);
+  }, [correctCount, total]);
 
   const isDisabled = result !== null || timeLeft === 0;
 
   const VERSION = "14.12.1";
   const LANG = "ko_KR";
 
-  // 전체 챔피언 목록 불러오기
   async function fetchChampionList(): Promise<{ id: string; name: string }[]> {
     const res = await fetch(
       `https://ddragon.leagueoflegends.com/cdn/${VERSION}/data/${LANG}/champion.json`
@@ -200,17 +162,14 @@ export const useQuiz = () => {
     answer,
     timeLeft,
     result,
-    currentQuestion,
     questionsAnswered,
     questionCount,
-    selectedQuestions,
     correctCount,
     isQuizFinished,
     progress,
     quizStats,
     isDisabled,
     total,
-    lastQuestion,
     questionList,
     setAnswer,
     handleSubmit,
