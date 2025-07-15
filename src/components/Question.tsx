@@ -1,3 +1,5 @@
+"use client";
+
 import React, { type JSX } from "react";
 import { QuizComponent, Button } from "./styled";
 import { QuestionSelector } from "./QuestionSelector";

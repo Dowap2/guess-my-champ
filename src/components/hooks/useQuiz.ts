@@ -1,6 +1,8 @@
+"use client";
+
 import { useState, useEffect, useCallback, useMemo } from "react";
 import type { Question, QuizResult } from "../types.ts";
-import { TIMER_DURATION, TIMER_INTERVAL } from "../constants.js";
+import { TIMER_DURATION, TIMER_INTERVAL } from "../constants";
 
 export const useQuiz = () => {
   const [answer, setAnswer] = useState<string>("");
@@ -30,7 +32,6 @@ export const useQuiz = () => {
   }, [result, timeLeft]);
 
   const handleSubmit = () => {
-    console.log(questionsAnswered, total);
     if (questionsAnswered === total) {
       return;
     }
@@ -39,7 +40,7 @@ export const useQuiz = () => {
       answer.trim() === questionList[questionsAnswered]?.correctAnswer;
 
     setResult(isCorrect ? "correct" : "wrong");
-    console.log(isCorrect);
+
     if (isCorrect) {
       setCorrectCount((prev) => prev + 1);
     }
@@ -154,7 +155,6 @@ export const useQuiz = () => {
         }
       })
     );
-    // console.log(questions, currentQuestion);
     setQuestionList(questions.filter((q): q is Question => q !== null));
   }
 
