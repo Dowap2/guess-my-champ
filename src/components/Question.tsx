@@ -4,7 +4,7 @@ import React, { type JSX } from "react";
 import { QuizComponent, Button } from "./styled";
 import { QuestionSelector } from "./QuestionSelector";
 import { QuizResult } from "./QuizResult";
-import { QuizQuestion } from "./QuizQuestion";
+import { Quiz } from "./Quiz";
 import { ProgressBar } from "./ProgressBar";
 import { Timer } from "./Timer";
 import { useQuiz } from "./hooks/useQuiz";
@@ -48,7 +48,7 @@ export const Question: React.FC = () => {
       />
 
       {questionList[questionsAnswered] && (
-        <QuizQuestion
+        <Quiz
           answer={answer}
           result={result}
           isDisabled={isDisabled}

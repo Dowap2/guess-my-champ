@@ -1,12 +1,13 @@
 import type { ReactNode } from "react";
-import "../src/App.css";
-import { Question } from "../src/components/Question";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <body>
-        <div className="app-container">{children}</div>
+        <header>
+          <h1>Next.js 퀴즈 앱</h1>
+        </header>
+        <main>{children}</main>
       </body>
     </html>
   );
