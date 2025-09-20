@@ -15,7 +15,7 @@ export const Timer: React.FC<TimerProps> = ({ timeLeft, maxTime }) => {
         ⏱️ 남은 시간: {timeLeft}초
       </div>
       <TimerContainer>
-        <TimerBar width={percentage} timeLeft={timeLeft} />
+        <TimerBar $width={percentage} $timeLeft={timeLeft} />
       </TimerContainer>
     </>
   );

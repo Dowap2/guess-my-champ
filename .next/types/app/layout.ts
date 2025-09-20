@@ -1,4 +1,4 @@
-// File: C:\Users\OKM\Desktop\Dev\guess-my-champ\app\layout.tsx
+// File: /Users/ohkyungtae/무제 폴더/guess-my-champ/app/layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
